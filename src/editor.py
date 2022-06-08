@@ -6,7 +6,13 @@ from pathlib import Path
 from collections import defaultdict
 
 from PyQt5.Qsci import QsciLexerCustom, QsciScintilla
-from PyQt5.Qt import *
+from PyQt5.Qt import (
+    
+    QFont,
+    QColor,
+    QShortcut,
+    
+)
 
 from pygments import lexers, styles, highlight, formatters
 from pygments.lexer import Error, RegexLexer, Text, _TokenType
