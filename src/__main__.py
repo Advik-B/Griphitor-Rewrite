@@ -284,10 +284,38 @@ class Editor(QMainWindow):
         
 
     def credits_(self):
-        print("Credits")
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setWindowTitle("Credits")
+        msg.setText("Thanks to the following people for their contributions:")
+        msg.setWindowIcon(self.windowIcon())
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setInformativeText(
+            """
+            Advik-B: Developer, UI, and Testing
+            Oxmc: Original Developer of Griphitor, Testing
+            GivingHawk: Domain and Hosting (Money money money)
+            Griphcode: Idea, Testing, and Documentation
+            
+            Advik-B (Advik):
+                github.com/Advik-B
+                advik.b@gmail.com
+            
+            Oxmc (Seth Leland Olivarez):
+                github.com/oxmc
+                oxmc7769@gmail.com
+            
+            GivingHawk (Rhys):
+                github.com/GivingHawk
+                
+            Griphcode (Rafeal):
+                github.com/Griphcode
+                
+            """
+        )
+        msg.exec_()
 
     def line_number(self):
-        print("Line number")
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         msg.setText("Line numbers are not implemented (yet)")
