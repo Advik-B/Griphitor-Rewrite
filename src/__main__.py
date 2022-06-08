@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QMenuBar, QAction
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QAction
+import webbrowser
 import sys
 
 class Editor(QMainWindow):
@@ -12,9 +13,180 @@ class Editor(QMainWindow):
         self.status = self.statusBar()
         self.status.startTimer(1000)
         self.status.showMessage('Ready')
-        self.menubar = QMenuBar(self)
-        self.menubar.setNativeMenuBar(True)
+        self.menubar = self.menuBar()
+        
+        # Menu bars
+        # File | Edit | View | Help | About
+        # File -> New, Open, Save, Save As, Close, Exit
+        # Edit -> Undo, Redo, Cut, Copy, Paste, Delete, Select All
+        # View -> Font, Font Size, Line Wrap, Status Bar
+        # Help -> Report Bug
+        # About -> About Griph-Pad, About Qt, License, Credits
+        self.file_menu = self.menubar.addMenu('File')
+        self.edit_menu = self.menubar.addMenu('Edit')
+        self.view_menu = self.menubar.addMenu('View')
+        self.help_menu = self.menubar.addMenu('Help')
+        self.about_menu = self.menubar.addMenu('About')
+        
+        self.new_action = QAction('New', self)
+        self.new_action.setShortcut('Ctrl+N')
+        self.new_action.setStatusTip('Create a new file')
+        self.new_action.triggered.connect(self.new)
+        
+        self.open_action = QAction('Open', self)
+        self.open_action.setShortcut('Ctrl+O')
+        self.open_action.setStatusTip('Open a file')
+        self.open_action.triggered.connect(self.open)
+        
+        self.save_action = QAction('Save', self)
+        self.save_action.setShortcut('Ctrl+S')
+        self.save_action.setStatusTip('Save the document')
+        self.save_action.triggered.connect(self.save)
+        
+        self.save_as_action = QAction('Save As', self)
+        self.save_as_action.setStatusTip('Save the document as...')
+        self.save_as_action.setShortcut('Ctrl+Shift+S')
+        self.save_as_action.triggered.connect(self.save)
+        
+        self.exit_action = QAction('Exit', self)
+        self.exit_action.setShortcut('Ctrl+Q')
+        self.exit_action.setStatusTip('Exit Griph-Pad')
+
+        self.file_menu.addAction(self.new_action)
+        self.file_menu.addAction(self.open_action)
+        self.file_menu.addAction(self.save_action)
+        self.file_menu.addAction(self.save_as_action)
+        self.file_menu.addSeparator()
+        self.file_menu.addAction(self.exit_action)
+        
+        self.undo_action = QAction('Undo', self)
+        self.undo_action.setShortcut('Ctrl+Z')
+        self.undo_action.setStatusTip('Undo')
+        self.undo_action.triggered.connect(self.undo)
+        
+        self.redo_action = QAction('Redo', self)
+        self.redo_action.setShortcut('Ctrl+Y')
+        self.redo_action.setStatusTip('Redo')
+        self.redo_action.triggered.connect(self.redo)
+        
+        self.cut_action = QAction('Cut', self)
+        self.cut_action.setShortcut('Ctrl+X')
+        self.cut_action.setStatusTip('Cut the selection')
+        self.cut_action.triggered.connect(self.cut)
+        
+        self.copy_action = QAction('Copy', self)
+        self.copy_action.setShortcut('Ctrl+C')
+        self.copy_action.setStatusTip('Copy the selection')
+        self.copy_action.triggered.connect(self.copy)
+        
+        self.paste_action = QAction('Paste', self)
+        self.paste_action.setShortcut('Ctrl+V')
+        self.paste_action.setStatusTip('Paste from system clipboard')
+        self.paste_action.triggered.connect(self.paste)
+        
+        self.delete_action = QAction('Delete', self)
+        self.delete_action.setShortcut('Del')
+        self.delete_action.setStatusTip('Delete the selection or the character after the cursor')
+        self.delete_action.triggered.connect(self.delete)
+        
+        self.select_all_action = QAction('Select All', self)
+        self.select_all_action.setShortcut('Ctrl+A')
+        self.select_all_action.setStatusTip('Select all the text')
+        self.select_all_action.triggered.connect(self.select_all)
+        
+        self.edit_menu.addAction(self.undo_action)
+        self.edit_menu.addAction(self.redo_action)
+        self.edit_menu.addSeparator()
+        self.edit_menu.addAction(self.cut_action)
+        self.edit_menu.addAction(self.copy_action)
+        self.edit_menu.addAction(self.paste_action)
+        self.edit_menu.addAction(self.delete_action)
+        self.edit_menu.addSeparator()
+        self.edit_menu.addAction(self.select_all_action)
+        
+        self.font_action = QAction('Font', self)
+        self.font_action.setStatusTip('Change the current font')
+        self.font_action.setShortcut('Ctrl+shift+F')
+        self.font_action.triggered.connect(self.font)
+        
+        self.font_size_action = QAction('Font Size', self)
+        self.font_size_action.setStatusTip('Change the current font size')
+        self.font_size_action.setShortcut('Ctrl+shift+S')
+        self.font_size_action.triggered.connect(self.font_size)
+        
+        self.line_wrap_action = QAction('Line Wrap', self)
+        self.line_wrap_action.setStatusTip('Toggle line wrap')
+        self.line_wrap_action.setShortcut('Ctrl+shift+W')
+        self.line_wrap_action.triggered.connect(self.line_wrap)
+        self.line_wrap_action.setCheckable(True)
+        
+        self.status_bar_action = QAction('Status Bar', self)
+        self.status_bar_action.setStatusTip('Toggle status bar')
+        self.status_bar_action.setShortcut('Ctrl+shift+B')
+        self.status_bar_action.triggered.connect(self.status_bar)
+        self.status_bar_action.setCheckable(True)
+        
+        self.view_menu.addAction(self.font_action)
+        self.view_menu.addAction(self.font_size_action)
+        self.view_menu.addAction(self.line_wrap_action)
+        self.view_menu.addAction(self.status_bar_action)
+        
+        self.report_bug_action = QAction('Report Bug', self)
+        self.report_bug_action.setStatusTip('Report a bug')
+        self.report_bug_action.triggered.connect(self.report_bug)
         self.show()
+    
+    def new(self):
+        print('New file')
+    
+    def open(self):
+        print('Open file')
+    
+    def save(self):
+        print('Save file')
+    
+    def exit(self):
+        print('Exit')
+    
+    def copy(self):
+        print('Copy')
+    
+    def paste(self):
+        print('Paste')
+    
+    def cut(self):
+        print('Cut')
+    
+    def undo(self):
+        print('Undo')
+    
+    def redo(self):
+        print('Redo')
+    
+    def delete(self):
+        print('Delete')
+    
+    def select_all(self):
+        print('Select all')
+    
+    def status_bar(self):
+        print('Status bar')
+    
+    def font(self):
+        print('Font')
+    
+    def font_size(self):
+        print('Font size')
+    
+    def line_wrap(self):
+        print('Line wrap')
+    
+    def report_bug(self):
+        webbrowser.open_new_tab("")
+    
+    def closeEvent(self, event):
+        event.accept()
+    
 
 def main():
     app = QApplication(sys.argv)
