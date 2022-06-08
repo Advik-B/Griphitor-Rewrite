@@ -255,6 +255,7 @@ class Editor(QMainWindow):
         msg.setWindowTitle("License Information")
         msg.setText('The license is for the "Griph-Pad" application. Not Qt.')
         msg.setInformativeText(
+            
             "MIT License\n"
             "\n"
             "Copyright (c) 2022-Present Griphitor Team <https://github.com/Griphitor>\n"
@@ -280,6 +281,7 @@ class Editor(QMainWindow):
         msg.setStandardButtons(QMessageBox.Ok)
         msg.setWindowIcon(self.windowIcon())
         msg.exec_()
+        
 
     def credits_(self):
         msg = QMessageBox()
