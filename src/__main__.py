@@ -149,7 +149,7 @@ class Editor(QMainWindow):
 
         self.enter_full_screen_action = QAction("Full Screen", self)
         self.enter_full_screen_action.setStatusTip("Enter/Exit full screen mode")
-        self.enter_full_screen_action.setShortcut("Ctrl+shift+V")
+        self.enter_full_screen_action.setShortcut("F11")
         self.enter_full_screen_action.triggered.connect(self.enter_full_screen)
         self.enter_full_screen_action.setCheckable(True)
 
@@ -257,6 +257,14 @@ class Editor(QMainWindow):
 
     def line_number(self):
         print("Line number")
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText("Line numbers are not implemented (yet)")
+        msg.setInformativeText("Sorry about that, I'm working on it")
+        msg.setWindowTitle("Not implemented Error")
+        msg.setWindowIcon(self.windowIcon())
+        msg.exec_()
+        self.line_number_action.setChecked(False)
 
     def closeEvent(self, event):
         event.accept()
