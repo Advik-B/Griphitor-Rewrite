@@ -17,6 +17,7 @@ from PyQt5.Qt import (
 from pygments import lexers, styles, highlight, formatters
 from pygments.lexer import Error, RegexLexer, Text, _TokenType
 from pygments.style import Style
+from PyQt5.QtWidgets import QApplication
 
 
 EXTRA_STYLES = {
@@ -176,9 +177,11 @@ class View(QsciScintilla):
         self.setLexer(self.lexer)
 
         # -------- Shortcuts --------
-        self.text_size = 1
-        self.s1 = QShortcut(f"ctrl+1", view, self.reduce_text_size)
-        self.s2 = QShortcut(f"ctrl+2", view, self.increase_text_size)
+        self.font_size = 8
+        self.font = QFont("JetBrains Mono", self.font_size)
+        self.setFont(self.font)
+        self.setTabWidth(4)
+        self.setText("Hello")
         # self.gen_text()
 
         # # -------- Multiselection --------
@@ -225,34 +228,20 @@ class View(QsciScintilla):
             self.resetFoldMarginColors()
             self.setFoldMarginColors(c, c)
 
-    def increase_text_size(self):
-        self.text_size *= 2
-        self.gen_text()
 
-    def reduce_text_size(self):
-        if self.text_size == 1:
-            return
-        self.text_size //= 2
-        self.gen_text()
-
-    def gen_text(self):
-        content = Path(__file__).read_text()
-        while len(content) < self.text_size:
-            content *= 2
-        self.setText(content[:self.text_size])
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    view = View("c++", "monokai")
-    view.setText(textwrap.dedent("""\
-        '''
-        Ctrl+1 = You'll decrease the size of existing text
-        Ctrl+2 = You'll increase the size of existing text
+    view = View("python", "monokai")
+    # view.setText(textwrap.dedent("""\
+    #     '''
+    #     Ctrl+1 = You'll decrease the size of existing text
+    #     Ctrl+2 = You'll increase the size of existing text
 
-        Warning: Check the window title to see how long it takes rehighlighting
-        '''
-    """))
+    #     Warning: Check the window title to see how long it takes rehighlighting
+    #     '''
+    # """))
     view.resize(800, 600)
     view.show()
     app.exec_()
