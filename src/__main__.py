@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QAction
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QAction, QMessageBox
+from PyQt5.QtCore import Qt
 import webbrowser
 import sys
 
@@ -17,9 +18,10 @@ class Editor(QMainWindow):
         
         # Menu bars
         # File | Edit | View | Help | About
+        # ============================================================
         # File -> New, Open, Save, Save As, Close, Exit
         # Edit -> Undo, Redo, Cut, Copy, Paste, Delete, Select All
-        # View -> Font, Font Size, Line Wrap, Status Bar
+        # View -> Font, Font Size, Line Wrap, Status Bar, Line Numbers
         # Help -> Report Bug
         # About -> About Griph-Pad, About Qt, License, Credits
         self.initMenuBar()
@@ -130,10 +132,18 @@ class Editor(QMainWindow):
         self.status_bar_action.triggered.connect(self.status_bar)
         self.status_bar_action.setCheckable(True)
         
+        self.line_number_action = QAction('Line Numbers', self)
+        self.line_number_action.setStatusTip('Toggle line numbers')
+        self.line_number_action.setShortcut('Ctrl+shift+L')
+        self.line_number_action.triggered.connect(self.line_number)
+        self.line_number_action.setCheckable(True)
+        
         self.view_menu.addAction(self.font_action)
         self.view_menu.addAction(self.font_size_action)
         self.view_menu.addAction(self.line_wrap_action)
         self.view_menu.addAction(self.status_bar_action)
+        self.view_menu.addSeparator()
+        self.view_menu.addAction(self.line_number_action)
         
         self.report_bug_action = QAction('Report Bug', self)
         self.report_bug_action.setStatusTip('Report a bug (Via Github)')
@@ -148,17 +158,17 @@ class Editor(QMainWindow):
         self.about_action.triggered.connect(self.about)
         
         self.about_qt_action = QAction('About Qt', self)
-        self.about_qt_action.setStatusTip('About Qt')
+        self.about_qt_action.setStatusTip('About Qt Framework (PyQt5)')
         self.about_qt_action.setShortcut('Ctrl+Shift+Q')
         self.about_qt_action.triggered.connect(self.about_qt)
         
         self.license = QAction('License', self)
-        self.license.setStatusTip('License')
+        self.license.setStatusTip('License Information')
         self.license.setShortcut('Ctrl+Shift+L')
         self.license.triggered.connect(self.license_)
         
         self.credits = QAction('Credits', self)
-        self.credits.setStatusTip('Credits')
+        self.credits.setStatusTip('Credits and Thanks')
         self.credits.setShortcut('Ctrl+Shift+C')
         self.credits.triggered.connect(self.credits_)
         
@@ -219,7 +229,7 @@ class Editor(QMainWindow):
         print('About')
     
     def about_qt(self):
-        print('About Qt')
+        QMessageBox.aboutQt(self, 'About Qt')
     
     def license_(self):
         print('License')
@@ -227,11 +237,15 @@ class Editor(QMainWindow):
     def credits_(self):
         print('Credits')
     
+    def line_number(self):
+        print('Line number')
+    
     def closeEvent(self, event):
         event.accept()
     
 
 def main():
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     app = QApplication(sys.argv)
     UI = Editor()
     return app.exec_()
