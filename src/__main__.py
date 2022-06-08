@@ -22,6 +22,10 @@ class Editor(QMainWindow):
         # View -> Font, Font Size, Line Wrap, Status Bar
         # Help -> Report Bug
         # About -> About Griph-Pad, About Qt, License, Credits
+        self.initMenuBar()
+        self.show()
+    
+    def initMenuBar(self):
         self.file_menu = self.menubar.addMenu('File')
         self.edit_menu = self.menubar.addMenu('Edit')
         self.view_menu = self.menubar.addMenu('View')
@@ -44,7 +48,7 @@ class Editor(QMainWindow):
         self.save_action.triggered.connect(self.save)
         
         self.save_as_action = QAction('Save As', self)
-        self.save_as_action.setStatusTip('Save the document as...')
+        self.save_as_action.setStatusTip('Save the document without overwriting the current file')
         self.save_as_action.setShortcut('Ctrl+Shift+S')
         self.save_as_action.triggered.connect(self.save)
         
@@ -132,9 +136,36 @@ class Editor(QMainWindow):
         self.view_menu.addAction(self.status_bar_action)
         
         self.report_bug_action = QAction('Report Bug', self)
-        self.report_bug_action.setStatusTip('Report a bug')
+        self.report_bug_action.setStatusTip('Report a bug (Via Github)')
+        self.report_bug_action.setShortcut('Ctrl+B')
         self.report_bug_action.triggered.connect(self.report_bug)
-        self.show()
+        
+        self.help_menu.addAction(self.report_bug_action)
+        
+        self.about_action = QAction('About', self)
+        self.about_action.setStatusTip('About Griph-Pad')
+        self.about_action.setShortcut('Ctrl+Shift+A')
+        self.about_action.triggered.connect(self.about)
+        
+        self.about_qt_action = QAction('About Qt', self)
+        self.about_qt_action.setStatusTip('About Qt')
+        self.about_qt_action.setShortcut('Ctrl+Shift+Q')
+        self.about_qt_action.triggered.connect(self.about_qt)
+        
+        self.license = QAction('License', self)
+        self.license.setStatusTip('License')
+        self.license.setShortcut('Ctrl+Shift+L')
+        self.license.triggered.connect(self.license_)
+        
+        self.credits = QAction('Credits', self)
+        self.credits.setStatusTip('Credits')
+        self.credits.setShortcut('Ctrl+Shift+C')
+        self.credits.triggered.connect(self.credits_)
+        
+        self.about_menu.addAction(self.about_action)
+        self.about_menu.addAction(self.about_qt_action)
+        self.about_menu.addAction(self.license)
+        self.about_menu.addAction(self.credits)
     
     def new(self):
         print('New file')
@@ -170,7 +201,7 @@ class Editor(QMainWindow):
         print('Select all')
     
     def status_bar(self):
-        print('Status bar')
+        self.status.hide() if self.status.isVisible() else self.status.show()
     
     def font(self):
         print('Font')
@@ -182,7 +213,19 @@ class Editor(QMainWindow):
         print('Line wrap')
     
     def report_bug(self):
-        webbrowser.open_new_tab("")
+        webbrowser.open_new_tab("https://github.com/Griphitor/Griph-pad/issues/new/choose")
+    
+    def about(self):
+        print('About')
+    
+    def about_qt(self):
+        print('About Qt')
+    
+    def license_(self):
+        print('License')
+    
+    def credits_(self):
+        print('Credits')
     
     def closeEvent(self, event):
         event.accept()
