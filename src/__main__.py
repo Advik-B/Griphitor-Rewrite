@@ -1,7 +1,10 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QAction, QMessageBox
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 import webbrowser
 import sys
+
+ICON = 'assets/icon.png'
 
 class Editor(QMainWindow):
     def __init__(self):
@@ -10,6 +13,7 @@ class Editor(QMainWindow):
     
     def initUI(self):
         self.setWindowTitle('Griph-Pad - A lightweight editor')
+        self.setWindowIcon(QIcon(ICON))
         self.resize(800, 600)
         self.status = self.statusBar()
         self.status.startTimer(1000)
@@ -21,7 +25,7 @@ class Editor(QMainWindow):
         # ============================================================
         # File -> New, Open, Save, Save As, Close, Exit
         # Edit -> Undo, Redo, Cut, Copy, Paste, Delete, Select All
-        # View -> Font, Font Size, Line Wrap, Status Bar, Line Numbers
+        # View -> Font, Font Size, Line Wrap, Status Bar, Line Numbers, Full Screen
         # Help -> Report Bug
         # About -> About Griph-Pad, About Qt, License, Credits
         self.initMenuBar()
@@ -138,12 +142,19 @@ class Editor(QMainWindow):
         self.line_number_action.triggered.connect(self.line_number)
         self.line_number_action.setCheckable(True)
         
+        self.enter_full_screen_action = QAction('Full Screen', self)
+        self.enter_full_screen_action.setStatusTip('Enter/Exit full screen mode')
+        self.enter_full_screen_action.setShortcut('Ctrl+shift+V')
+        self.enter_full_screen_action.triggered.connect(self.enter_full_screen)
+        self.enter_full_screen_action.setCheckable(True)
+        
         self.view_menu.addAction(self.font_action)
         self.view_menu.addAction(self.font_size_action)
         self.view_menu.addAction(self.line_wrap_action)
         self.view_menu.addAction(self.status_bar_action)
         self.view_menu.addSeparator()
         self.view_menu.addAction(self.line_number_action)
+        self.view_menu.addAction(self.enter_full_screen_action)
         
         self.report_bug_action = QAction('Report Bug', self)
         self.report_bug_action.setStatusTip('Report a bug (Via Github)')
@@ -164,7 +175,7 @@ class Editor(QMainWindow):
         
         self.license = QAction('License', self)
         self.license.setStatusTip('License Information')
-        self.license.setShortcut('Ctrl+Shift+L')
+        self.license.setShortcut('Ctrl+Alt+L')
         self.license.triggered.connect(self.license_)
         
         self.credits = QAction('Credits', self)
@@ -242,6 +253,12 @@ class Editor(QMainWindow):
     
     def closeEvent(self, event):
         event.accept()
+        
+    def enter_full_screen(self):
+        if self.isFullScreen():
+            self.showNormal()
+        else:
+            self.showFullScreen()
     
 
 def main():
