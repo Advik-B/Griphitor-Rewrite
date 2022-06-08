@@ -264,6 +264,7 @@ class Editor(QMainWindow):
         msg.setWindowTitle("Not implemented Error")
         msg.setWindowIcon(self.windowIcon())
         msg.exec_()
+        del msg
         self.line_number_action.setChecked(False)
 
     def closeEvent(self, event):
