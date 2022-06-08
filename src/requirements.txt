@@ -2,3 +2,4 @@ PyQt5
 PyQtWebEngine
 PyYAML
 Pygments
+QScintilla
