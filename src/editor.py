@@ -2,6 +2,7 @@ import math
 import sys
 import textwrap
 import time
+import os
 from pathlib import Path
 from collections import defaultdict
 
@@ -18,28 +19,12 @@ from pygments import lexers, styles, highlight, formatters
 from pygments.lexer import Error, RegexLexer, Text, _TokenType
 from pygments.style import Style
 from PyQt5.QtWidgets import QApplication
+import json
 
-
-EXTRA_STYLES = {
-    "monokai": {
-        "background": "#272822",
-        "caret": "#F8F8F0",
-        "foreground": "#F8F8F2",
-        "invisibles": "#F8F8F259",
-        "lineHighlight": "#3E3D32",
-        "selection": "#49483E",
-        "findHighlight": "#FFE792",
-        "findHighlightForeground": "#000000",
-        "selectionBorder": "#222218",
-        "activeGuide": "#9D550FB0",
-        "misspelling": "#F92672",
-        "bracketsForeground": "#F8F8F2A5",
-        "bracketsOptions": "underline",
-        "bracketContentsForeground": "#F8F8F2A5",
-        "bracketContentsOptions": "underline",
-        "tagsOptions": "stippled_underline",
-    }
-}
+tf = os.path.join(os.getcwd(), "themes")
+THEMES = {}
+for file in os.listdir(tf):
+    THEMES.update({file.replace('.json', ''): json.load(open(os.path.join(tf, file)))})
 
 
 def convert_size(size_bytes):
@@ -54,7 +39,7 @@ def convert_size(size_bytes):
 
 class ViewLexer(QsciLexerCustom):
 
-    def __init__(self, lexer_name, style_name):
+    def __init__(self, lexer_name, style_name, font:QFont):
         super().__init__()
 
         # Lexer + Style
@@ -63,10 +48,10 @@ class ViewLexer(QsciLexerCustom):
         self.cache = {
             0: ('root',)
         }
-        self.extra_style = EXTRA_STYLES[style_name]
+        self.extra_style = THEMES[style_name]
 
         # Generate QScintilla styles
-        self.font = QFont("Consolas", 8, weight=QFont.Bold)
+        self.font = font
         self.token_styles = {}
         index = 0
         for k, v in self.pyg_style:
@@ -170,19 +155,17 @@ class View(QsciScintilla):
     def __init__(self, lexer_name, style_name):
         super().__init__()
         view = self
-
-        # -------- Lexer --------
-        self.setEolMode(QsciScintilla.EolUnix)
-        self.lexer = ViewLexer(lexer_name, style_name)
-        self.setLexer(self.lexer)
-
         # -------- Shortcuts --------
         self.font_size = 8
         self.font = QFont("JetBrains Mono", self.font_size)
         self.setFont(self.font)
         self.setTabWidth(4)
         self.setText("Hello")
-        # self.gen_text()
+
+        # -------- Lexer --------
+        self.setEolMode(QsciScintilla.EolUnix)
+        self.lexer = ViewLexer(lexer_name, style_name, self.font)
+        self.setLexer(self.lexer)
 
         # # -------- Multiselection --------
         self.SendScintilla(view.SCI_SETMULTIPLESELECTION, True)
@@ -190,7 +173,7 @@ class View(QsciScintilla):
         self.SendScintilla(view.SCI_SETADDITIONALSELECTIONTYPING, True)
 
         # -------- Extra settings --------
-        self.set_extra_settings(EXTRA_STYLES[style_name])
+        self.set_extra_settings(THEMES[style_name])
 
     def get_line_separator(self):
         m = self.eolMode()
