@@ -8,11 +8,9 @@ from collections import defaultdict
 
 from PyQt5.Qsci import QsciLexerCustom, QsciScintilla
 from PyQt5.Qt import (
-    
     QFont,
     QColor,
     QShortcut,
-    
 )
 
 from pygments import lexers, styles, highlight, formatters
@@ -24,7 +22,7 @@ import json
 tf = os.path.join(os.getcwd(), "themes")
 THEMES = {}
 for file in os.listdir(tf):
-    THEMES.update({file.replace('.json', ''): json.load(open(os.path.join(tf, file)))})
+    THEMES.update({file.replace(".json", ""): json.load(open(os.path.join(tf, file)))})
 
 
 def convert_size(size_bytes):
@@ -38,16 +36,13 @@ def convert_size(size_bytes):
 
 
 class ViewLexer(QsciLexerCustom):
-
-    def __init__(self, lexer_name, style_name, font:QFont):
+    def __init__(self, lexer_name, style_name, font: QFont):
         super().__init__()
 
         # Lexer + Style
         self.pyg_style = styles.get_style_by_name(style_name)
         self.pyg_lexer = lexers.get_lexer_by_name(lexer_name, stripnl=False)
-        self.cache = {
-            0: ('root',)
-        }
+        self.cache = {0: ("root",)}
         self.extra_style = THEMES[style_name]
 
         # Generate QScintilla styles
@@ -70,7 +65,7 @@ class ViewLexer(QsciLexerCustom):
     def language(self):
         return self.pyg_lexer.name
 
-    def get_tokens_unprocessed(self, text, stack=('root',)):
+    def get_tokens_unprocessed(self, text, stack=("root",)):
         """
         Split ``text`` into (tokentype, text) pairs.
 
@@ -96,16 +91,16 @@ class ViewLexer(QsciLexerCustom):
                         # state transition
                         if isinstance(new_state, tuple):
                             for state in new_state:
-                                if state == '#pop':
+                                if state == "#pop":
                                     statestack.pop()
-                                elif state == '#push':
+                                elif state == "#push":
                                     statestack.append(statestack[-1])
                                 else:
                                     statestack.append(state)
                         elif isinstance(new_state, int):
                             # pop
                             del statestack[new_state:]
-                        elif new_state == '#push':
+                        elif new_state == "#push":
                             statestack.append(statestack[-1])
                         else:
                             assert False, "wrong state def: %r" % new_state
@@ -115,11 +110,11 @@ class ViewLexer(QsciLexerCustom):
                 # We are here only if all state tokens have been considered
                 # and there was not a match on any of them.
                 try:
-                    if text[pos] == '\n':
+                    if text[pos] == "\n":
                         # at EOL, reset state to "root"
-                        statestack = ['root']
-                        statetokens = tokendefs['root']
-                        yield pos, Text, u'\n'
+                        statestack = ["root"]
+                        statetokens = tokendefs["root"]
+                        yield pos, Text, "\n"
                         pos += 1
                         continue
                     yield pos, Error, text[pos]
@@ -144,14 +139,15 @@ class ViewLexer(QsciLexerCustom):
         t_elapsed = time.time() - t_start
         len_text = len(view.text())
         text_size = convert_size(len_text)
-        view.setWindowTitle(f"Text size: {len_text} - {text_size} Elapsed: {t_elapsed}s")
+        view.setWindowTitle(
+            f"Text size: {len_text} - {text_size} Elapsed: {t_elapsed}s"
+        )
 
     def description(self, style_nr):
         return str(style_nr)
 
 
 class View(QsciScintilla):
-
     def __init__(self, lexer_name, style_name):
         super().__init__()
         view = self
@@ -178,13 +174,13 @@ class View(QsciScintilla):
     def get_line_separator(self):
         m = self.eolMode()
         if m == QsciScintilla.EolWindows:
-            eol = '\r\n'
+            eol = "\r\n"
         elif m == QsciScintilla.EolUnix:
-            eol = '\n'
+            eol = "\n"
         elif m == QsciScintilla.EolMac:
-            eol = '\r'
+            eol = "\r"
         else:
-            eol = ''
+            eol = ""
         return eol
 
     def set_extra_settings(self, dct):
@@ -212,9 +208,7 @@ class View(QsciScintilla):
             self.setFoldMarginColors(c, c)
 
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     view = View("python", "monokai")
     # view.setText(textwrap.dedent("""\
