@@ -1,0 +1,18 @@
+{
+    "background": "#272822",
+    "caret": "#F8F8F0",
+    "foreground": "#F8F8F2",
+    "invisibles": "#F8F8F259",
+    "lineHighlight": "#3E3D32",
+    "selection": "#49483E",
+    "findHighlight": "#FFE792",
+    "findHighlightForeground": "#000000",
+    "selectionBorder": "#222218",
+    "activeGuide": "#9D550FB0",
+    "misspelling": "#F92672",
+    "bracketsForeground": "#F8F8F2A5",
+    "bracketsOptions": "underline",
+    "bracketContentsForeground": "#F8F8F2A5",
+    "bracketContentsOptions": "underline",
+    "tagsOptions": "stippled_underline"
+}

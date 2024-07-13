@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2021 Advik
+Copyright (c) 2022-Present Griphitor Team <https://github.com/Griphitor>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
